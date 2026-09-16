@@ -7,8 +7,8 @@ The data source is `~/Documents/todo.md`. Headings are projects, checkbox items 
 ```markdown
 # Home
 
-- [ ] Buy paint for the hallway @Katrien {2026-09-16 12:37}
-- [o] Mount the shelves @Kenneth {2026-09-15 09:02}
+- [ ] Buy paint for the hallway @Bernice {2026-09-16 12:37}
+- [o] Mount the shelves @Frances {2026-09-15 09:02}
 - [x] Call the plumber
 ```
 

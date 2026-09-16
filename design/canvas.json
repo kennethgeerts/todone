@@ -31,7 +31,7 @@
       "x": 1540,
       "y": -10,
       "w": 420,
-      "text": "Drawn with the running shell's tokens: current gruvbox theme, monospace at 12px base, corner radius 0, menu card 875\u00d7600 with 2px foreground border and 18px padding, 28px controls.\nProject names other than NABU are placeholders. Font stands in for the system monospace."
+      "text": "Drawn with the running shell's tokens: current gruvbox theme, monospace at 12px base, corner radius 0, menu card 875\u00d7600 with 2px foreground border and 18px padding, 28px controls.\nProject and people names are placeholders. Font stands in for the system monospace."
     }
   ],
   "launch": {

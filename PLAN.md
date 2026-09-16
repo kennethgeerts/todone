@@ -43,9 +43,9 @@ The CLI owns parsing, validation, and every mutation. The QML plugin never rewri
 Top-level headings are projects. Tasks are checkbox list items beneath them:
 
 ```markdown
-# NABU
+# Work
 
-- [ ] Todo task @Kenneth {2026-09-16 12:37}
+- [ ] Todo task @Frances {2026-09-16 12:37}
 - [o] In-progress task {2026-09-15 09:02}
 - [x] Done task
 ```
@@ -65,7 +65,7 @@ A mention is a token inside the task text that assigns the task to a person. Men
 
 - A mention is `@` followed by a letter, then any run of letters, digits, `_`, or `-`.
 - It must start at the beginning of the task text or after whitespace, and end at whitespace or end of line.
-- Matching is exact, like project names. `@kenneth` and `@Kenneth` are two people. `check` warns when two mentions differ only by case.
+- Matching is exact, like project names. `@frances` and `@Frances` are two people. `check` warns when two mentions differ only by case.
 - A mention may appear anywhere in the text. The plugin highlights it in place rather than moving it to the end.
 - A task may mention several people.
 - Mentions are part of the task text and therefore part of the task ID. Adding one is an edit like any other.
@@ -74,11 +74,11 @@ Not a mention, by that rule:
 
 | Text | Why |
 |------|-----|
-| `Mail kenneth@sofuto.be` | Not preceded by whitespace |
+| `Mail alice@example.com` | Not preceded by whitespace |
 | `Meet @ noon` | No letter after the marker |
 | `Order @2 spare parts` | Starts with a digit |
 
-Mentions are free-form names. The household set is `@Kenneth`, `@Katrien`, `@Cisse`, and `@Stan`, but the CLI accepts any name so a new one never needs a config change.
+Mentions are free-form names. A household might use `@Frances`, `@Bernice`, `@Chris`, and `@Dana`; the CLI accepts any name, so a new one never needs a config change.
 
 ### Timestamps
 
@@ -151,7 +151,7 @@ todone check [--json]
 Behaviour:
 
 - `list` hides done tasks in human output; `--all` shows them. `--json` always contains every task. Both follow the ordering rule under Timestamps.
-- `--person` filters `list`. It may repeat, and a task must then mention every given name. The `@` is optional, so `--person Kenneth` and `--person @Kenneth` are the same.
+- `--person` filters `list`. It may repeat, and a task must then mention every given name. The `@` is optional, so `--person Frances` and `--person @Frances` are the same.
 - `people` lists every distinct mention with its open-task count, ordered by first appearance.
 - `stamp` adds the current time to every task that has none and changes nothing else. It is the only mutation that touches more than one task.
 - Mentions are added or removed by editing the text. There is no `assign` command, so the file stays the single vocabulary.
@@ -182,23 +182,23 @@ Conventions:
 ```json
 {
   "schemaVersion": 1,
-  "file": "/home/kenneth/Documents/todo.md",
+  "file": "/home/frances/Documents/todo.md",
   "revision": "9f2c...",
   "projects": [
     {
       "id": "a1b2",
-      "name": "NABU",
+      "name": "Work",
       "line": 1,
       "tasks": [
-        { "id": "c3d4", "text": "Todo task @Kenneth", "state": "todo", "line": 3,
-          "created": "2026-09-16 12:37", "people": ["Kenneth"] }
+        { "id": "c3d4", "text": "Todo task @Frances", "state": "todo", "line": 3,
+          "created": "2026-09-16 12:37", "people": ["Frances"] }
       ]
     }
   ],
-  "people": [ { "name": "Kenneth", "open": 1 } ],
+  "people": [ { "name": "Frances", "open": 1 } ],
   "warnings": [
-    { "line": 27, "kind": "duplicate-project", "message": "Project 'NABU' appears twice" },
-    { "line": 31, "kind": "mention-case", "message": "Mentions '@Kenneth' and '@kenneth' differ only by case" }
+    { "line": 27, "kind": "duplicate-project", "message": "Project 'Work' appears twice" },
+    { "line": 31, "kind": "mention-case", "message": "Mentions '@Frances' and '@frances' differ only by case" }
   ]
 }
 ```
@@ -227,9 +227,9 @@ The parser and mutation logic live in `document.py` and `model.py`, independent 
 
 ## Omarchy plugin
 
-Plugin ID `kenneth.todone` for now; switch to a reverse-domain ID before publishing. The `omarchy.*` namespace is reserved.
+Plugin ID `frances.todone` for now; switch to a reverse-domain ID before publishing. The `omarchy.*` namespace is reserved.
 
-The plugin lives under `plugin/` in the repository and is installed by copying into `~/.config/omarchy/plugins/kenneth.todone/`. The validator refuses symlinks inside a plugin folder, so the install script must copy. The shell hot-reloads plugin code on save. Never modify `/usr/share/omarchy/`.
+The plugin lives under `plugin/` in the repository and is installed by copying into `~/.config/omarchy/plugins/frances.todone/`. The validator refuses symlinks inside a plugin folder, so the install script must copy. The shell hot-reloads plugin code on save. Never modify `/usr/share/omarchy/`.
 
 ### Manifest
 
@@ -238,7 +238,7 @@ As enforced by `omarchy plugin validate` and `shell/services/PluginRegistry.qml`
 ```json
 {
   "schemaVersion": 1,
-  "id": "kenneth.todone",
+  "id": "frances.todone",
   "name": "Todone",
   "version": "0.1.0",
   "author": "Kenneth",
@@ -260,15 +260,15 @@ As enforced by `omarchy plugin validate` and `shell/services/PluginRegistry.qml`
       "todoFile": "~/Documents/todo.md",
       "cliPath": "todone",
       "countInProgress": true,
-      "people": "Kenneth, Katrien, Cisse, Stan"
+      "people": ""
     },
     "schema": [
       { "key": "todoFile", "type": "path", "label": "Todo file", "defaultValue": "~/Documents/todo.md" },
       { "key": "cliPath", "type": "string", "label": "todone executable", "defaultValue": "todone",
         "description": "Command or absolute path. The shell's PATH may not include ~/.local/bin." },
       { "key": "countInProgress", "type": "boolean", "label": "Count in-progress tasks in the bar", "defaultValue": true },
-      { "key": "people", "type": "string", "label": "People offered for @ completion", "defaultValue": "Kenneth, Katrien, Cisse, Stan",
-        "description": "Comma-separated. Names found in the file are offered too." }
+      { "key": "people", "type": "string", "label": "People offered for @ completion", "defaultValue": "",
+        "description": "Comma-separated. Names found in the file are offered anyway." }
     ]
   }
 }
@@ -276,7 +276,7 @@ As enforced by `omarchy plugin validate` and `shell/services/PluginRegistry.qml`
 
 `schemaVersion` must be the JSON number 1, and each declared kind needs its matching entry point. Settings are declared on the `barWidget` block because that is the only settings surface the shell offers. `keepLoaded: true` keeps the overlay mounted between summons, like the first-party clipboard and reminders overlays.
 
-Validate with `omarchy plugin validate plugin`. Enable with `omarchy plugin enable kenneth.todone right`. If a code change fails to apply, run `omarchy-shell shell rescanPlugins`.
+Validate with `omarchy plugin validate plugin`. Enable with `omarchy plugin enable frances.todone right`. If a code change fails to apply, run `omarchy-shell shell rescanPlugins`.
 
 ### Bar widget
 
@@ -285,55 +285,55 @@ Validate with `omarchy plugin validate plugin`. Enable with `omarchy plugin enab
 ```
 
 - A task icon and the count of todo tasks, plus in-progress tasks when `countInProgress` is on.
-- Click runs `omarchy-shell shell toggle kenneth.todone '{}'` through `root.bar.run`, the same path the first-party menu widget uses.
+- Click runs `omarchy-shell shell toggle frances.todone '{}'` through `root.bar.run`, the same path the first-party menu widget uses.
 - Theme colours and metrics from the shared `Color` and `Style` singletons in `qs.Commons`.
 - A warning glyph instead of a count when the CLI fails or the file does not parse.
 
 ### Overlay
 
-A visual mockup drawn with the shell's own theme tokens lives at <https://claude.ai/code/artifact/92c92174-77e7-4ce2-948c-d79224d9edc8>; its source is `design/`. The sketches below carry the same layout. Project names other than NABU are placeholders.
+A visual mockup drawn with the shell's own theme tokens lives at <https://claude.ai/code/artifact/92c92174-77e7-4ce2-948c-d79224d9edc8>; its source is `design/`. The sketches below carry the same layout. Project and people names are placeholders.
 
 ```text
 ┌──────────────────────────────────────────────────────────────────┐
 │  Search tasks…                                                   │
-│  #NABU   #Home   #Garden   #Admin   #Car   #Holiday              │
-│  @Kenneth   @Katrien   @Cisse   @Stan                            │
+│  #Work   #Home   #Garden   #Admin   #Car   #Holiday              │
+│  @Frances   @Bernice   @Chris   @Dana                            │
 ├──────────────────────────────────────────────────────────────────┤
-│  ▸ ○  Todo task ⟨@Kenneth⟩                                       │
-│    ○  Buy paint for the hallway ⟨@Katrien⟩ ⟨@Stan⟩               │
-│    ◐  Fix the fence ⟨@Cisse⟩                                     │
+│  ▸ ○  Todo task ⟨@Frances⟩                                       │
+│    ○  Buy paint for the hallway ⟨@Bernice⟩ ⟨@Dana⟩               │
+│    ◐  Fix the fence ⟨@Chris⟩                                     │
 │    ◐  In-progress task                                           │
 │    ○  Call the plumber                                           │
 │    ○  Order seeds                                                │
 │    ●  Done task                                                  │
 ├──────────────────────────────────────────────────────────────────┤
-│  +  Add to #NABU… (# project, @ people)                          │
+│  +  Add to #Work… (# project, @ people)                          │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-Each bullet carries its project's colour. The same overlay with `#Home` and `@Kenneth` selected, with the quick-add going to `Home` and `@Kenneth` pre-filled:
+Each bullet carries its project's colour. The same overlay with `#Home` and `@Frances` selected, with the quick-add going to `Home` and `@Frances` pre-filled:
 
 ```text
 │  Search tasks…                                                   │
-│  #NABU  [#Home]  #Garden   #Admin   #Car   #Holiday              │
-│ [@Kenneth]  @Katrien   @Cisse   @Stan                            │
+│  #Work  [#Home]  #Garden   #Admin   #Car   #Holiday              │
+│ [@Frances]  @Bernice   @Chris   @Dana                            │
 ├──────────────────────────────────────────────────────────────────┤
-│  ▸ ○  Paint the hallway ⟨@Kenneth⟩ ⟨@Katrien⟩                    │
-│    ◐  Mount the shelves ⟨@Kenneth⟩                                │
+│  ▸ ○  Paint the hallway ⟨@Frances⟩ ⟨@Bernice⟩                    │
+│    ◐  Mount the shelves ⟨@Frances⟩                                │
 ├──────────────────────────────────────────────────────────────────┤
-│  +  @Kenneth Add to #Home…                                       │
+│  +  @Frances Add to #Home…                                       │
 ```
 
 Layout:
 
 - A search field at the top, in the same place and style as the clipboard overlay's filter line. It matches task text and mentions, case-insensitively, and narrows the list live. Empty by default.
 - Two button rows below it. The first has one button per project in file order, labelled `#Name` to echo the Markdown heading. The second has one button per name from the snapshot's `people` array in file order, labelled `@Name`. Nothing is selected by default, so the overlay opens on every task.
-- At most one selection per row. Clicking a selected button clears that row. A task shows when it passes the search and both rows. No button is special: `@Kenneth` is a person like any other.
+- At most one selection per row. Clicking a selected button clears that row. A task shows when it passes the search and both rows. No button is special: `@Frances` is a person like any other.
 - Selections and the search persist while the overlay stays loaded and reset when the shell restarts. A selected project or person that disappears from the file clears that row.
 - The task list is one flat list, newest first, whatever the filters. It is never split into project groups.
 - Each project has a colour, taken from the theme palette in file order (blue, green, yellow, magenta, orange, cyan, then cycling), so it follows the theme. The colour is used on the project's filter button, on the state bullet of every task in that project, and on the project name in the quick-add placeholder. People have no colour.
 - Done tasks are always shown, in their recency position, with a filled bullet and dimmed text. There is no done filter. Deleting is the only way to make a task disappear.
-- A quick-add field sits at the bottom, just a `+` and a text field. The task's project comes from the text: the first `#Project` token that matches an existing project decides where the task goes and is stripped before the line is written. With no such token, the task goes to the selected project filter, or to the first project when none is selected. The placeholder names that default, "Add to #NABU…", with the project in its colour, and follows the filter. A `#word` matching no project stays as plain text.
+- A quick-add field sits at the bottom, just a `+` and a text field. The task's project comes from the text: the first `#Project` token that matches an existing project decides where the task goes and is stripped before the line is written. With no such token, the task goes to the selected project filter, or to the first project when none is selected. The placeholder names that default, "Add to #Work…", with the project in its colour, and follows the filter. A `#word` matching no project stays as plain text.
 - When a person is selected, the field opens pre-filled with that mention, which the user can delete.
 - Mentions render as neutral chips in place within the task text, using the `⟨@Name⟩` positions above.
 - Typing `@` in the quick-add or edit field opens a completion popup with the configured people merged with names found in the file. Typing `#` in the quick-add field opens the same popup with the projects. Enter accepts, Escape dismisses, and the text is otherwise free.

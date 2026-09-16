@@ -1,6 +1,6 @@
 # Generates the three artboards from one token set lifted from the running Omarchy shell.
 FG="#d4be98"; BG="#282828"; ACC="#7daea3"; DESK="#1e1e1e"
-PROJECTS={"NABU":"#7daea3","Home":"#a9b665","Garden":"#d8a657","Admin":"#d3869b","Car":"#e1875c","Holiday":"#89b482"}
+PROJECTS={"Work":"#7daea3","Home":"#a9b665","Garden":"#d8a657","Admin":"#d3869b","Car":"#e1875c","Holiday":"#89b482"}
 
 CSS = f"""
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
@@ -39,7 +39,7 @@ def button(label, selected=False, bordered=False, color=None):
     border = f"1px solid {FG}66" if bordered else "1px solid transparent"
     return f'<div style="display: flex; align-items: center; height: 28px; padding: 0 10px; box-sizing: border-box; font-size: 12px; line-height: 16px; color: {c}; background: {bg}; border: {border}">{label}</div>'
 
-def row(kind, text, people=(), selected=False, dim=False, project="NABU"):
+def row(kind, text, people=(), selected=False, dim=False, project="Work"):
     color = ACC if selected else FG
     glyph_color = PROJECTS[project]
     if dim: color=f"{FG}80"; glyph_color=f"{PROJECTS[project]}99"
@@ -99,31 +99,31 @@ def field(inner, placeholder=True):
     color = f"{FG}94" if placeholder else FG
     return f'<div style="display: flex; align-items: center; gap: 6px; flex: 1 1 auto; height: 28px; padding: 0 10px; box-sizing: border-box; border: 1px solid {FG}66; font-size: 12px; color: {color}">{inner}</div>'
 
-projects=["NABU","Home","Garden","Admin","Car","Holiday"]
-people_row=["Kenneth","Katrien","Cisse","Stan"]
+projects=["Work","Home","Garden","Admin","Car","Holiday"]
+people_row=["Frances","Bernice","Chris","Dana"]
 
 # ---- Default state
 default_list = "".join([
-  row("todo","Todo task",["Kenneth"],selected=True,project="NABU"),
-  row("todo","Buy paint for the hallway",["Katrien","Stan"],project="Home"),
-  row("prog","Fix the fence",["Cisse"],project="Garden"),
-  row("todo","Renew car insurance",["Kenneth"],project="Admin"),
-  row("prog","In-progress task",project="NABU"),
+  row("todo","Todo task",["Frances"],selected=True,project="Work"),
+  row("todo","Buy paint for the hallway",["Bernice","Dana"],project="Home"),
+  row("prog","Fix the fence",["Chris"],project="Garden"),
+  row("todo","Renew car insurance",["Frances"],project="Admin"),
+  row("prog","In-progress task",project="Work"),
   row("todo","Call the plumber",project="Home"),
   row("todo","Order seeds",project="Garden"),
-  row("done","Done task",dim=True,project="NABU"),
+  row("done","Done task",dim=True,project="Work"),
 ])
-default_quick = plus + field(f'Add to <span style="color: {PROJECTS["NABU"]}">#NABU</span>… <span style="opacity: .7">(# project, @ people)</span>')
+default_quick = plus + field(f'Add to <span style="color: {PROJECTS["Work"]}">#Work</span>… <span style="opacity: .7">(# project, @ people)</span>')
 open("Main.dc.html","w").write(head("Todone overlay")+overlay(projects,people_row,default_list,default_quick,None,None)+TAIL)
 
 # ---- Filtered state: Home + Mine
 filtered_list = "".join([
-  row("todo","Paint the hallway",["Kenneth","Katrien"],selected=True,project="Home"),
-  row("prog","Mount the shelves",["Kenneth"],project="Home"),
+  row("todo","Paint the hallway",["Frances","Bernice"],selected=True,project="Home"),
+  row("prog","Mount the shelves",["Frances"],project="Home"),
 ])
 caret = f'<span style="display: inline-block; width: 1px; height: 14px; background: {FG}"></span>'
-filtered_quick = plus + field(chip("Kenneth")+caret+f'<span style="color: {FG}94">Add to <span style="color: {PROJECTS["Home"]}">#Home</span>…</span>', placeholder=False)
-open("Filtered.dc.html","w").write(head("Todone overlay, filtered")+overlay(projects,people_row,filtered_list,filtered_quick,"Home","Kenneth")+TAIL)
+filtered_quick = plus + field(chip("Frances")+caret+f'<span style="color: {FG}94">Add to <span style="color: {PROJECTS["Home"]}">#Home</span>…</span>', placeholder=False)
+open("Filtered.dc.html","w").write(head("Todone overlay, filtered")+overlay(projects,people_row,filtered_list,filtered_quick,"Home","Frances")+TAIL)
 
 # ---- Bar strip
 open("Bar.dc.html","w").write(head("Todone bar widget")+f'<div style="width: 1440px; height: 26px">{bar()}</div>'+TAIL)
@@ -136,7 +136,7 @@ json.dump({
     {"file":"Filtered.dc.html","x":1540,"y":160,"w":1440,"h":900,"title":"Overlay, Home + Mine"}
   ],
   "annotations":[
-    {"id":"tokens","x":1540,"y":-10,"w":420,"text":"Drawn with the running shell's tokens: current gruvbox theme, monospace at 12px base, corner radius 0, menu card 875×600 with 2px foreground border and 18px padding, 28px controls.\nProject names other than NABU are placeholders. Font stands in for the system monospace."}
+    {"id":"tokens","x":1540,"y":-10,"w":420,"text":"Drawn with the running shell's tokens: current gruvbox theme, monospace at 12px base, corner radius 0, menu card 875×600 with 2px foreground border and 18px padding, 28px controls.\nProject and people names are placeholders. Font stands in for the system monospace."}
   ],
   "launch":{"view":"canvas"}
 }, open("canvas.json","w"), indent=2)
